@@ -24,6 +24,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Sécurité : supprimer tout autre compte (anciens utilisateurs / tests).
+        // Seul l'admin doit pouvoir accéder à l'application.
+        User::where('email', '!=', 'admin@gym.com')->delete();
+
         // Types d'abonnement
         $monthly = SubscriptionType::firstOrCreate(
             ['name' => 'Mensuel'],
