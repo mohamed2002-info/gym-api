@@ -1,0 +1,56 @@
+# Blueprint Render : crée automatiquement le service web + la base PostgreSQL.
+services:
+  - type: web
+    name: gym-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: GymManager
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true            # Render génère une clé sécurisée
+      - key: APP_URL
+        value: https://gym-api.onrender.com
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: pgsql
+      # Connexion à la base ci-dessous (Render injecte les valeurs)
+      - key: DB_HOST
+        fromDatabase:
+          name: gym-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: gym-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: gym-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: gym-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: gym-db
+          property: password
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+
+databases:
+  - name: gym-db
+    plan: free
+    databaseName: gym
+    user: gym
