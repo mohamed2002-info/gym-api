@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// ---- Routes publiques (authentification) ----
-Route::post('/register', [AuthController::class, 'register']);
+// ---- Route publique : connexion uniquement ----
+// (Pas d'inscription publique : un seul compte admin créé par le seeder.)
 Route::post('/login', [AuthController::class, 'login']);
 
 // ---- Routes protégées par token Sanctum ----
@@ -28,18 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Tableau de bord
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
 
-    // Membres (CRUD complet) + renouvellement — accessible à tout utilisateur connecté
+    // Membres (CRUD complet) + renouvellement
     Route::apiResource('members', MemberController::class);
     Route::post('/members/{member}/renew', [MemberController::class, 'renew']);
 
-    // Types d'abonnement : lecture pour tous les utilisateurs connectés
-    Route::get('subscription-types', [SubscriptionTypeController::class, 'index']);
-    Route::get('subscription-types/{subscription_type}', [SubscriptionTypeController::class, 'show']);
-
-    // Types d'abonnement : création / modification / suppression réservées à l'ADMIN
-    Route::middleware('admin')->group(function () {
-        Route::post('subscription-types', [SubscriptionTypeController::class, 'store']);
-        Route::put('subscription-types/{subscription_type}', [SubscriptionTypeController::class, 'update']);
-        Route::delete('subscription-types/{subscription_type}', [SubscriptionTypeController::class, 'destroy']);
-    });
+    // Types d'abonnement (CRUD complet)
+    Route::apiResource('subscription-types', SubscriptionTypeController::class);
 });

@@ -12,7 +12,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Compte ADMIN de démonstration
+        // Unique compte : l'administrateur (propriétaire de la salle).
+        // Pas d'inscription publique : c'est le seul accès à l'application.
         User::firstOrCreate(
             ['email' => 'admin@gym.com'],
             [
@@ -20,17 +21,6 @@ class DatabaseSeeder extends Seeder
                 'phone'    => '+216 20 111 111',
                 'password' => 'password',
                 'role'     => 'admin',
-            ]
-        );
-
-        // Compte UTILISATEUR de démonstration
-        User::firstOrCreate(
-            ['email' => 'demo@gym.com'],
-            [
-                'name'     => 'Coach Demo',
-                'phone'    => '+216 20 000 000',
-                'password' => 'password',
-                'role'     => 'user',
             ]
         );
 
